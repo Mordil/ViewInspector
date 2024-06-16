@@ -455,16 +455,19 @@ internal extension Content {
         #else
         let popoverModifiers: [ViewSearch.ModifierIdentity] = []
         #endif
-        return
-            .init(count: sheetModifiers.count, { index -> UnwrappedView in
-                try sheetModifiers[index].builder(parent, index)
-            }) + .init(count: actionSheetModifiers.count, { index -> UnwrappedView in
-                try actionSheetModifiers[index].builder(parent, index)
-            }) + .init(count: alertModifiers.count, { index -> UnwrappedView in
-                try alertModifiers[index].builder(parent, index)
-            }) + .init(count: popoverModifiers.count, { index -> UnwrappedView in
-                try popoverModifiers[index].builder(parent, index)
-            })
+        let sheetModifiersGroup = LazyGroup(count: sheetModifiers.count, { index -> UnwrappedView in
+            try sheetModifiers[index].builder(parent, index)
+        })
+        let actionSheetGroup = LazyGroup(count: actionSheetModifiers.count, { index -> UnwrappedView in
+            try actionSheetModifiers[index].builder(parent, index)
+        })
+        let alertModifiersGroup = LazyGroup(count: alertModifiers.count, { index -> UnwrappedView in
+            try alertModifiers[index].builder(parent, index)
+        })
+        let popoverModifiersGroup = LazyGroup(count: popoverModifiers.count, { index -> UnwrappedView in
+            try popoverModifiers[index].builder(parent, index)
+        })
+        return sheetModifiersGroup + actionSheetGroup + alertModifiersGroup + popoverModifiersGroup
     }
 }
 
